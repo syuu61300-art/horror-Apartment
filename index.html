@@ -37,6 +37,27 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--fluor);outline-
 #obj .ch{font-size:11px;letter-spacing:.18em;color:var(--fluor-dim)}
 #obj .tx{font-size:15px;font-weight:500;line-height:1.5;margin-top:2px;text-shadow:0 1px 6px #000}
 #obj.faded{opacity:.28}
+.hintb{margin-top:6px;padding:4px 10px;font-size:11px;letter-spacing:.12em;color:var(--fluor);box-shadow:inset 0 0 0 1px var(--line);border-radius:12px;background:rgba(8,9,11,.45)}
+#objHint{margin-top:6px;max-width:min(60vw,420px);font-size:13px;line-height:1.65;color:var(--fluor);background:rgba(6,7,9,.72);padding:7px 10px;border-radius:3px;box-shadow:inset 0 0 0 1px var(--line)}
+#guideLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.gm{position:absolute;left:0;top:0;will-change:transform}
+.gm .r{position:absolute;left:-12px;top:-12px;width:24px;height:24px;border-radius:50%;box-shadow:0 0 0 2px #f2e2b8,0 0 14px 2px rgba(242,226,184,.55);animation:gpulse 1.4s ease-in-out infinite}
+.gm .r::after{content:"";position:absolute;left:9px;top:9px;width:6px;height:6px;border-radius:50%;background:#f2e2b8}
+.gm .a{display:none;position:absolute;left:-14px;top:-14px;width:28px;height:28px}
+.gm .a::before{content:"";position:absolute;left:8px;top:6px;border-left:16px solid #f2e2b8;border-top:8px solid transparent;border-bottom:8px solid transparent;filter:drop-shadow(0 0 6px rgba(242,226,184,.7))}
+.gm.edge .r{display:none}.gm.edge .a{display:block}
+.gm .n{position:absolute;left:18px;top:-10px;white-space:nowrap;font-size:12px;font-weight:700;letter-spacing:.06em;color:#f2e2b8;text-shadow:0 1px 3px #000,0 0 2px #000;background:rgba(6,7,9,.55);padding:1px 7px;border-radius:2px}
+.gm.flip .n{left:auto;right:18px}
+.gm.edge .n{top:16px;left:-30px}.gm.edge.flip .n{left:auto;right:-10px}
+.gm.way .r{border-radius:3px;transform:rotate(45deg)}
+.gdot{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(219,231,222,.75);background:rgba(219,231,222,.18)}
+.gdot.hot{box-shadow:0 0 0 2px var(--fluor),0 0 10px rgba(219,231,222,.6)}
+@keyframes gpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.35);opacity:.6}}
+#btnUse{opacity:.32}
+#btnUse.ready{opacity:1;background:rgba(219,231,222,.16);box-shadow:inset 0 0 0 2px var(--fluor),0 0 18px rgba(219,231,222,.35);animation:gpulse 1.4s ease-in-out infinite}
+#useLabel{font-size:15px;font-weight:700;background:rgba(6,7,9,.6);padding:3px 9px;border-radius:3px}
+#useLabel:empty{display:none}
+@media (prefers-reduced-motion: reduce){.gm .r,#btnUse.ready{animation:none}}
 #clock{position:absolute;right:calc(64px + env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));font-size:13px;letter-spacing:.08em;font-variant-numeric:tabular-nums;color:var(--fluor-dim)}
 #pauseBtn{position:absolute;right:calc(12px + env(safe-area-inset-right,0px));top:calc(6px + env(safe-area-inset-top,0px));width:40px;height:40px;pointer-events:auto;display:grid;place-items:center}
 #pauseBtn i{display:block;width:14px;height:14px;border-left:3px solid var(--fluor-dim);border-right:3px solid var(--fluor-dim);box-sizing:border-box}
@@ -168,7 +189,7 @@ input[type=range]{width:46%;accent-color:#cfdcd3}
 <div id="stage"></div>
 
 <div id="hud" class="layer off">
-  <div id="obj"><div class="ch" id="objCh"></div><div class="tx" id="objTx"></div></div>
+  <div id="obj"><div class="ch" id="objCh"></div><div class="tx" id="objTx"></div><button id="hintBtn" class="hintb" hidden>？ ヒント</button><div id="objHint" hidden></div></div>
   <div id="clock">23:41</div>
   <button id="pauseBtn" aria-label="一時停止"><i></i></button>
   <div id="cross"></div>
@@ -239,6 +260,7 @@ input[type=range]{width:46%;accent-color:#cfdcd3}
     <div class="row"><span>画質</span><div class="seg" id="sQ"><button data-v="auto">自動</button><button data-v="high">高</button><button data-v="mid">中</button><button data-v="low">低</button></div></div>
     <div class="row"><span>視点感度</span><input type="range" id="sSens" min="0.4" max="2.4" step="0.05"></div>
     <div class="row"><span>音量</span><input type="range" id="sVol" min="0" max="1" step="0.05"></div>
+    <div class="row"><span>ガイド（目印・ヒント）</span><div class="seg" id="sGuide"><button data-v="1">表示</button><button data-v="0">非表示</button></div></div>
     <div class="row"><span>字幕</span><div class="seg" id="sSub"><button data-v="1">表示</button><button data-v="0">非表示</button></div></div>
     <div class="row"><span>上下反転</span><div class="seg" id="sInv"><button data-v="0">なし</button><button data-v="1">あり</button></div></div>
     <div class="row"><span>FPS表示</span><div class="seg" id="sFps"><button data-v="0">なし</button><button data-v="1">あり</button></div></div>
@@ -290,7 +312,7 @@ const IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 const nowS = () => performance.now() / 1000;
 
 /* ---------- persistent settings / save ---------- */
-const SET = { q: 'auto', sens: 1, vol: 0.9, subs: 1, inv: 0, fps: 0 };
+const SET = { q: 'auto', sens: 1, vol: 0.9, subs: 1, inv: 0, fps: 0, guide: 1 };
 const SAVE = { unlocked: 1, name: '', knock: 0, cp: '' };
 (function loadStore() {
   try {
@@ -2542,7 +2564,8 @@ function setupInput() {
 function toggleLight() { PLAYER.light = !PLAYER.light; $('btnLight').classList.toggle('offl', !PLAYER.light); AU.ok && AU.click(null, 0.5, 4000); }
 function tryInteract() {
   if (!PLAYER.control && !(PLAYER.view && PLAYER.view.allowUse)) return;
-  const o = PLAYER.target; if (!o) return;
+  const o = PLAYER.target;
+  if (!o) { const t = nowS(); if (!tryInteract.t || t - tryInteract.t > 4) { tryInteract.t = t; SUB.sfx('（調べたい物に近づき、画面中央の点を合わせてください）', 3); } return; }
   o.act();
 }
 
@@ -2697,13 +2720,13 @@ function setView(v) {
 const HUD = {
   objTimer: 0, lastTarget: undefined,
   show(on) { $('hud').classList.toggle('off', !on); },
-  obj(ch, text) { $('objCh').textContent = ch || ''; $('objTx').textContent = text || ''; this.flashObj(); $('pauseObj').textContent = text ? '目的：' + text : ''; },
+  obj(ch, text) { $('objCh').textContent = ch || ''; $('objTx').textContent = text || ''; this.flashObj(); $('pauseObj').textContent = text ? '目的：' + text : ''; if (typeof GUIDE !== 'undefined') GUIDE.set(text); },
   flashObj() { $('obj').classList.remove('faded'); this.objTimer = 7; },
-  ctrl(on) { $('btnLight').hidden = !on; $('btnRun').hidden = !on || !IS_TOUCH; if (!on) { $('btnUse').hidden = true; $('useLabel').textContent = ''; } },
+  ctrl(on) { this.ctrlOn = on; $('btnLight').hidden = !on; $('btnRun').hidden = !on || !IS_TOUCH; $('btnUse').hidden = !on || !IS_TOUCH; if (!on) { $('useLabel').textContent = ''; $('btnUse').classList.remove('ready'); this.lastTarget = undefined; } },
   setTarget(lab) {
     if (lab === this.lastTarget) return; this.lastTarget = lab;
     const has = !!lab; $('cross').classList.toggle('hot', has);
-    $('btnUse').hidden = !has || !IS_TOUCH; $('useLabel').textContent = lab || '';
+    $('btnUse').classList.toggle('ready', has); $('useLabel').textContent = lab || '';
     if (!IS_TOUCH) $('useLabel').textContent = lab ? `[E]　${lab}` : '';
   },
   clock(min) { const m = ((Math.floor(min) % 1440) + 1440) % 1440; $('clock').textContent = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); },
@@ -2852,14 +2875,14 @@ const MENU = {
     $('deadRetry').addEventListener('click', () => GAME.retry());
     $('rotOk').addEventListener('click', () => { $('rotate').hidden = true; GAME.rotDismissed = true; });
     const seg = (id, key, conv) => { $(id).querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { SET[key] = conv(b.dataset.v); this.syncSet(); saveStore(); if (key === 'fps') $('fps').hidden = !SET.fps; })); };
-    seg('sQ', 'q', (v) => v); seg('sSub', 'subs', Number); seg('sInv', 'inv', Number); seg('sFps', 'fps', Number);
+    seg('sQ', 'q', (v) => v); seg('sSub', 'subs', Number); seg('sGuide', 'guide', Number); seg('sInv', 'inv', Number); seg('sFps', 'fps', Number);
     $('sSens').addEventListener('input', (e) => { SET.sens = parseFloat(e.target.value); });
     $('sVol').addEventListener('input', (e) => { SET.vol = parseFloat(e.target.value); AU.setVolume(SET.vol); });
   },
   go(id) { for (const s of ['title', 'nameScr', 'chapScr', 'setScr', 'pauseScr']) $(s).hidden = s !== id; if (id === 'title') TITLE_RAIN.start(); else TITLE_RAIN.stop(); },
   syncSet() {
     const mark = (id, v) => $(id).querySelectorAll('button').forEach((b) => b.classList.toggle('on', String(b.dataset.v) === String(v)));
-    mark('sQ', SET.q); mark('sSub', SET.subs); mark('sInv', SET.inv); mark('sFps', SET.fps);
+    mark('sQ', SET.q); mark('sSub', SET.subs); mark('sGuide', SET.guide); mark('sInv', SET.inv); mark('sFps', SET.fps);
     $('sSens').value = SET.sens; $('sVol').value = SET.vol;
   },
   chapList() {
@@ -2880,6 +2903,168 @@ function applySettings() {
   $('fps').hidden = !SET.fps;
   if (GAME.renderer && SET.q !== GAME.qApplied) { GAME.qApplied = SET.q; GAME.reconfigureQuality(); }
 }
+
+/* ==========================================================================
+   GUIDE — objective markers, route waypoints, nearby-interactable dots, hints
+   ========================================================================== */
+const GV = (x, y, z) => new THREE.Vector3(x, y, z);
+const GNAME = {
+  brk: 'ブレーカー', light203: '照明の紐', light204: '照明の紐', b1: '段ボール', b2: '段ボール', b3: '段ボール', kettle203: '電気ケトル',
+  oshi203: '押入れ', oshi204: '押入れ', listen203: '押入れの奥の壁', scope203: 'ドアスコープ', kairan: '回覧板', d204: '二〇四号室のドア', d203: '玄関ドア',
+  key204: '鍵', register: '台帳', tv101: 'テレビ', tv204: 'テレビ', washer204: '洗濯機', kettle204: 'やかん', heat204: '給湯器パネル', heat203: '給湯器パネル',
+  hole204: '壁の穴', fridge203: '冷蔵庫', clock203: '壁の時計', retpost: '返却ポスト', wall204: '壁', d101: '管理人室のドア',
+};
+// objective text prefix -> targets + hint
+const GUIDE_MAP = [
+  ['ブレーカーを上げる', ['brk'], '玄関ドアの上にある白い箱がブレーカーです。見上げて「調べる」を押してください。'],
+  ['部屋の明かりをつける', ['light203'], '奥の和室へ進み、天井の丸い照明から下がっている紐を見て「調べる」。'],
+  ['荷ほどきをする', ['b1', 'b2', 'b3'], '段ボールは和室に2つ、玄関に1つあります。光る印の場所へ。'],
+  ['お湯を沸かす', ['kettle203'], '台所の流し台の横に電気ケトルがあります。'],
+  ['押入れを開ける', ['oshi203'], '和室の横の襖（押入れ）を開けます。'],
+  ['壁に耳を当てる', ['listen203'], '開けた押入れの奥の壁を見て「調べる」。'],
+  ['ブレーカーを確認する', ['brk'], '玄関へ戻ってください。'],
+  ['もう一度、ドアスコープを覗く', ['scope203'], '玄関ドアの正面に立ち、ドアを見て「調べる」。'],
+  ['ドアスコープを覗く', ['scope203'], '玄関ドアの正面に立ち、ドアを見て「調べる」。'],
+  ['回覧板を読む', ['kairan'], '玄関の床に差し込まれた回覧板を拾います。'],
+  ['回覧板を二〇四号室へ回す', ['d204'], '玄関から廊下へ出て、右手の突き当たりにある二〇四号室のドア（郵便受け）へ。'],
+  ['一階の管理人室へ行く', [{ pos: () => GV(1.4, 1.0, 1.6), name: '管理人室' }], '廊下の端の階段を下り、一階の手前側にある101号室（管理人室）へ。'],
+  ['二〇四号室の鍵を探す', ['key204', 'register'], '机の上を調べてください。台帳も読めます。'],
+  ['テレビを消す', ['tv101'], '部屋の奥のテレビを見て「調べる」。近づかれる前に。'],
+  ['二〇四号室の鍵を開ける', ['d204'], '二階へ戻り、二〇四号室のドアを調べます。'],
+  ['二〇四号室に入る', [{ pos: () => GV(WORLD.units.u204.X(0.7), F2 + 1.0, 1.2), name: '二〇四号室' }], '開いたドアから中へ。'],
+  ['生活音を止める', ['tv204', 'washer204', 'kettle204', 'heat204'], 'テレビ（和室）、洗濯機（台所の奥）、コンロのやかん、給湯器パネル（浴室の外壁）。走らず歩いて。来たら浴室に入ってドアを閉めると隠れられます。'],
+  ['押入れの穴を覗く', ['hole204'], '開いた押入れの奥の壁の穴を「調べる」。'],
+  ['押入れを調べる', ['oshi204'], '和室の襖（押入れ）を開けます。'],
+  ['退去の準備をする', () => { const T = ST.tasks; return [!T.fridge && 'fridge203', !T.clock && 'clock203', !T.name && (P.fus203.open > 0.8 ? 'listen203' : 'oshi203')].filter(Boolean); },
+    '冷蔵庫のコンセント（台所）、時計（和室の入口の上）、押入れの中の名前。音を立てると起きます。来たら押入れか浴室に隠れて。給湯器やケトルの音でおびき寄せることもできます。'],
+  ['部屋を出る', ['d203'], '玄関のドアから外へ出ます。'],
+  ['一階の管理人室へ鍵を返す', [{ pos: () => GV(-0.8, F2 + 1.0, -1.0), name: '階段' }], '廊下を左へ。同じ場所を繰り返すなら「目を閉じる」を押し続けたまま歩いてください。'],
+  ['一階の返却ポストに鍵を入れる', ['retpost'], '階段を駆け下り、101号室のドア横の赤いポストへ。走って！'],
+  ['壁を叩く', ['wall204'], '目の前の押入れの奥の壁を「調べる」。'],
+];
+const STAIR_TOP = GV(-0.8, F2, -1.0), STAIR_BOT = GV(-0.8, 0, -7.0);
+function guideDoors() {
+  const U3 = WORLD.units.u203, U4 = WORLD.units.u204;
+  return {
+    u203: { inP: GV(U3.X(0.65), F2, 0.75), outP: GV(U3.X(0.65), F2, -0.7), name: '二〇三号室', inName: '玄関' },
+    u204: { inP: GV(U4.X(0.65), F2, 0.75), outP: GV(U4.X(0.65), F2, -0.7), name: '二〇四号室', inName: '玄関' },
+    r101: { inP: GV(0.75, 0, 0.7), outP: GV(0.75, 0, -0.7), name: '管理人室', inName: '出口' },
+    b203: { inP: GV(U3.X(1.9), F2 + 0.15, 1.8), outP: GV(U3.X(1.05), F2, 1.8), name: '浴室', inName: '浴室の出口' },
+    b204: { inP: GV(U4.X(1.9), F2 + 0.15, 1.8), outP: GV(U4.X(1.05), F2, 1.8), name: '浴室', inName: '浴室の出口' },
+  };
+}
+const ZPARENT = { b203: 'u203', b204: 'u204' };
+function guideRoute(tp) {
+  const pp = PLAYER.pos, pz = PLAYER.zone, tz = zoneAt(tp);
+  if (pz === tz) return null;
+  const D = guideDoors();
+  if (pz !== 'ext') {
+    if (ZPARENT[pz] && ZPARENT[pz] === tz) return { pos: D[pz].outP, name: D[pz].inName };
+    if (ZPARENT[tz] === pz) return { pos: D[tz].outP, name: D[tz].name };
+    const room = ZPARENT[pz] || pz;
+    if (ZPARENT[pz]) return { pos: D[pz].outP, name: D[pz].inName };
+    const d = D[room]; const near = Math.hypot(pp.x - d.inP.x, pp.z - d.inP.z) < 1.0;
+    return { pos: near ? d.outP : d.inP, name: d.inName };
+  }
+  const onStairs = pp.x > -1.45 && pp.x < -0.15 && pp.z < -1.45 && pp.z > -6.7;
+  const tUp = tp.y > 2.0;
+  if (tUp && pp.y < 2.6) return { pos: onStairs ? STAIR_TOP : STAIR_BOT, name: '階段' };
+  if (!tUp && pp.y > 0.4) return { pos: onStairs ? STAIR_BOT : STAIR_TOP, name: '階段' };
+  if (tz !== 'ext') { const d = D[ZPARENT[tz] || tz]; return { pos: d.outP, name: d.name }; }
+  return null;
+}
+
+const GUIDE = {
+  to: null, hint: '', since: 0, auto: 0, big: [], dots: [], hintT: 0, firstTip: false,
+  init() {
+    const layer = document.createElement('div'); layer.id = 'guideLayer'; $('hud').insertBefore(layer, $('hud').firstChild);
+    for (let i = 0; i < 4; i++) { const e = document.createElement('div'); e.className = 'gm'; e.innerHTML = '<i class="r"></i><i class="a"></i><span class="n"></span>'; e.hidden = true; layer.appendChild(e); this.big.push({ el: e, n: e.querySelector('.n') }); }
+    for (let i = 0; i < 8; i++) { const e = document.createElement('div'); e.className = 'gdot'; e.hidden = true; layer.appendChild(e); this.dots.push(e); }
+    $('hintBtn').addEventListener('click', (ev) => { ev.stopPropagation(); this.showHint(); });
+    $('hintBtn').addEventListener('touchend', (ev) => { ev.preventDefault(); ev.stopPropagation(); this.showHint(); });
+  },
+  set(text) {
+    let e = null;
+    if (text) for (const g of GUIDE_MAP) if (text.startsWith(g[0])) { e = g; break; }
+    const same = e && this.cur === e;
+    this.cur = e; this.to = e ? e[1] : null; this.hint = e ? e[2] : '';
+    if (!same) { this.since = 0; this.auto = 0; this.hideHint(); }
+    $('hintBtn').hidden = !this.hint;
+  },
+  showHint() {
+    if (!this.hint) return;
+    const h = $('objHint'); h.textContent = this.hint; h.hidden = false; this.hintT = 10; HUD.flashObj();
+  },
+  hideHint() { $('objHint').hidden = true; this.hintT = 0; },
+  resolve() {
+    let list = typeof this.to === 'function' ? this.to() : this.to;
+    const out = [];
+    for (const t of list || []) {
+      if (typeof t === 'string') { const o = I[t]; if (!o || !o.label()) continue; out.push({ pos: o.pos, name: GNAME[t] || o.label(), id: t }); }
+      else out.push({ pos: typeof t.pos === 'function' ? t.pos() : t.pos, name: t.name });
+    }
+    return out;
+  },
+  hideAll() { for (const b of this.big) b.el.hidden = true; for (const d of this.dots) d.hidden = true; },
+  update(dt) {
+    if (this.hintT > 0) { this.hintT -= dt; if (this.hintT <= 0) this.hideHint(); }
+    this.since += dt;
+    if (this.hint && ((this.since > 40 && this.auto === 0) || (this.since > 100 && this.auto === 1))) { this.auto++; this.showHint(); }
+    if (!SET.guide || PLAYER.view || DOC.open || CHOICE.open || !PLAYER.control) { this.hideAll(); return; }
+    CAM.updateMatrixWorld(); const W = window.innerWidth, H = window.innerHeight;
+    // objective markers (with route waypoints)
+    const marks = []; const seen = new Set();
+    for (const t of this.resolve()) {
+      const r = guideRoute(t.pos);
+      const m = r ? { pos: _gv.copy(r.pos).add(_gv2.set(0, 1.15, 0)).clone(), name: r.name, way: true } : { pos: t.pos, name: t.name };
+      if (seen.has(m.name + (m.way ? 'w' : t.id))) continue; seen.add(m.name + (m.way ? 'w' : t.id));
+      marks.push(m); if (marks.length >= 4) break;
+    }
+    const targetIds = new Set();
+    for (const t of this.resolve()) if (t.id) targetIds.add(t.id);
+    for (let i = 0; i < this.big.length; i++) {
+      const B = this.big[i], m = marks[i];
+      if (!m) { B.el.hidden = true; continue; }
+      B.el.hidden = false;
+      const c = _gv.copy(m.pos).applyMatrix4(CAM.matrixWorldInverse);
+      const d = PLAYER.pos.distanceTo(m.pos);
+      let x, y, edge = false, ang = 0;
+      if (c.z < -0.05) {
+        _gv2.copy(m.pos).project(CAM); x = (_gv2.x + 1) / 2 * W; y = (1 - _gv2.y) / 2 * H;
+        if (x < 26 || x > W - 26 || y < 70 || y > H - 40) edge = true;
+      } else edge = true;
+      if (edge) {
+        let dx = c.x, dy = -c.y; if (c.z >= -0.05 && Math.abs(dx) < 0.001) dx = 0.001;
+        if (c.z >= -0.05) { dy = Math.max(-0.3, Math.min(0.3, dy)); }
+        const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+        const Lb = 40, Rb = W - (IS_TOUCH ? 150 : 40), Tb = 92, Bb = H - (IS_TOUCH ? 120 : 56), cx = (Lb + Rb) / 2, cy = (Tb + Bb) / 2;
+        const kx = (dx > 0 ? Rb - cx : cx - Lb) / Math.max(Math.abs(dx), 1e-4), ky = (dy > 0 ? Bb - cy : cy - Tb) / Math.max(Math.abs(dy), 1e-4), k = Math.min(kx, ky);
+        x = cx + dx * k; y = cy + dy * k; ang = Math.atan2(dy, dx);
+      }
+      B.el.classList.toggle('edge', edge); B.el.classList.toggle('way', !!m.way);
+      B.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+      B.el.querySelector('.a').style.transform = `rotate(${ang}rad)`;
+      const txt = `${m.name}　${d < 1.5 ? 'すぐそこ' : Math.round(d) + 'm'}`;
+      if (B.n.textContent !== txt) B.n.textContent = txt;
+      B.el.classList.toggle('flip', x > W - 150);
+    }
+    // nearby interactables: small dots
+    let di = 0;
+    for (const o of INTER) {
+      if (di >= this.dots.length) break;
+      if (targetIds.has(o.id) || o.zones.indexOf(PLAYER.zone) < 0) continue;
+      const dd = CAM.position.distanceTo(o.pos); if (dd > 3.2) continue;
+      if (!o.label()) continue;
+      const c = _gv.copy(o.pos).applyMatrix4(CAM.matrixWorldInverse); if (c.z > -0.1) continue;
+      _gv2.copy(o.pos).project(CAM); const x = (_gv2.x + 1) / 2 * W, y = (1 - _gv2.y) / 2 * H;
+      if (x < 10 || x > W - 10 || y < 10 || y > H - 10) continue;
+      const e = this.dots[di++]; e.hidden = false; e.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+      e.classList.toggle('hot', PLAYER.target === o);
+    }
+    for (; di < this.dots.length; di++) this.dots[di].hidden = true;
+  },
+};
+const _gv = new THREE.Vector3(), _gv2 = new THREE.Vector3();
 
 /* ==========================================================================
    STORY — 第一章 入居 / 第二章 回覧板 / 第三章 退去 / 終章
@@ -3021,6 +3206,7 @@ async function runC1() {
   obj('ブレーカーを上げる');
   await wait(1.0); SUB.say('……電気がつかない。');
   await wait(2.6); SUB.say('ブレーカーは、玄関の上だったはず。');
+  await wait(2.4); if (SET.guide) SUB.sfx('（光る印が次に向かう場所です。迷ったら左上の「ヒント」）', 6);
   let go = false;
   setI('brk', 'ブレーカーを上げる', () => { go = true; clearI('brk'); });
   await until(() => go);
@@ -3314,7 +3500,7 @@ async function runC2c(fromPlay) {
   let fo = false;
   setI('oshi204', 'ふすまを開ける', () => { clearI('oshi204'); P.fus204.set(1); fo = true; P.hole204.visible = P.holeCore.visible = true; });
   await until(() => fo);
-  await wait(1.2); SUB.say('……穴が開いている。二〇三号室のほうへ。');
+  await wait(1.2); SUB.say('……穴が開いている。二〇三号室のほうへ。'); obj('押入れの穴を覗く');
   let pk = false;
   setI('hole204', '穴を覗く', () => { clearI('hole204'); pk = true; });
   await until(() => pk);
@@ -3685,6 +3871,7 @@ function updateLights(dt, t) {
 let heartT = 0;
 function update(dt, t) {
   updatePlayer(dt, t);
+  GUIDE.update(dt);
   for (const k in P.doors) P.doors[k].update(dt);
   P.fus203.update(dt); P.fus204.update(dt);
   for (const k in P.box) P.box[k].update();
@@ -3804,7 +3991,7 @@ async function boot() {
     PLAYER.place(WORLD.units.u203.X(0.75), F2 - 0.12, 0.62, Math.PI);
     updatePlayer(0.016, 0); updateLights(0.016, 0);
     try { RENDERER.compile(SCENE, CAM); POST.render(SCENE, CAM, 0); } catch (e) { console.warn('precompile', e); }
-    setupInput(); MENU.init(); MENU.refreshTitle();
+    setupInput(); GUIDE.init(); MENU.init(); MENU.refreshTitle();
     window.addEventListener('resize', () => onResize(true));
     document.addEventListener('visibilitychange', () => { if (document.hidden && GAME.playing && !GAME.paused && !GAME.modal) GAME.pause(true); });
     if (!POST.ok) { const m = document.createElement('div'); m.id = 'scopeMask'; m.className = 'layer'; m.hidden = true; m.style.cssText = 'z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 0,transparent 30vmin,#000 34vmin)'; document.body.appendChild(m); }
